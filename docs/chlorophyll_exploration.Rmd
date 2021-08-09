@@ -1,0 +1,69 @@
+---
+title: "Tooklik Chla concentrations"
+author: "Allie Cole"
+date: "8/9/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(janitor)
+library(here)
+library(skimr)
+```
+
+## Read in toolik_chlorophyll.csv as a data frame stored as `toolik_chlorophyll`
+
+```{r}
+toolik_chlorophyll <- read_csv(here::here("data", "data-raw", "toolik_chlorophyll.csv" ), na = ".")
+```
+
+## explore teh imported data with `skimr::skim`, `names()`, `dim()`, `summary()`
+
+```{r}
+skim(data = toolik_chlorophyll)
+
+names(toolik_chlorophyll)
+
+dim(toolik_chlorophyll)
+
+summary(toolik_chlorophyll)
+```
+
+## Cleaning up teh names 
+
+```{r}
+toolik_chlorophyll <- toolik_chlorophyll %>% clean_names()
+toolik_chlorophyll
+```
+
+
+## plot of depth v active chlorophyll 
+- Make point size change based on concentration
+- make all points "cyan4" 
+- updtate the theme to `theme_dark`
+
+```{r}
+toolik_chl_plot <- ggplot(data = toolik_chlorophyll, aes(x = depth, y = active_chl_a_ug_l)) +
+  geom_jitter(aes(size = active_chl_a_ug_l), show.legend = FALSE, color = "cyan") +
+  theme_dark() +
+  labs(title = "Toolik Station concentration based on depth",
+       x = "Depth ()",
+       y = "Chlorophyll Concentrations ()")
+toolik_chl_plot
+```
+
+```{r}
+ggsave(here::here("figs", "chlorophyll_plot.jpg"), plot = toolik_chl_plot)
+```
+
+
+
+
+
+
+
+
+
+
